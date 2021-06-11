@@ -27,7 +27,7 @@ __attribute__((unused)) static void flush_cpu_icache(void)
 
 __attribute__((unused)) static void flush_cpu_dcache(void)
 {
-#if defined(CONFIG_CPU_VARIANT_MINIMAL) || defined(CONFIG_CPU_VARIANT_LITE)
+#if defined(CONFIG_CPU_VARIANT_MINIMAL) || defined(CONFIG_CPU_VARIANT_LITE) || defined(CONFIG_CPU_VARIANT_FOMU)
   /* No data cache */
 #else
   asm volatile(".word(0x500F)\n");
