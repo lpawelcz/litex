@@ -23,9 +23,13 @@ from litex.soc.cores.cpu import CPU, CPU_GCC_TRIPLE_RISCV32
 
 CPU_VARIANTS = {
     "minimal":          "VexRiscv_Min",
+    "minimal+cfu":      "VexRiscv_MinCfu",
     "minimal+debug":    "VexRiscv_MinDebug",
+    "minimal+cfu+debug":"VexRiscv_MinCfuDebug",
     "lite":             "VexRiscv_Lite",
+    "lite+cfu":         "VexRiscv_LiteCfu",
     "lite+debug":       "VexRiscv_LiteDebug",
+    "lite+cfu+debug":   "VexRiscv_LiteCfuDebug",
     "standard":         "VexRiscv",
     "standard+debug":   "VexRiscv_Debug",
     "imac":             "VexRiscv_IMAC",
@@ -52,9 +56,13 @@ GCC_FLAGS = {
     #                               |||||/-- Double-Precision Floating-Point
     #                               imacfd
     "minimal":          "-march=rv32i      -mabi=ilp32",
+    "minimal+cfu":      "-march=rv32i      -mabi=ilp32",
     "minimal+debug":    "-march=rv32i      -mabi=ilp32",
+    "minimal+cfu+debug":"-march=rv32i      -mabi=ilp32",
     "lite":             "-march=rv32im     -mabi=ilp32",
+    "lite+cfu":         "-march=rv32im     -mabi=ilp32",
     "lite+debug":       "-march=rv32im     -mabi=ilp32",
+    "lite+cfu+debug":   "-march=rv32im     -mabi=ilp32",
     "standard":         "-march=rv32im     -mabi=ilp32",
     "standard+debug":   "-march=rv32im     -mabi=ilp32",
     "imac":             "-march=rv32imac   -mabi=ilp32",
