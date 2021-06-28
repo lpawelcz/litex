@@ -37,7 +37,7 @@ class SPIMaster(Module, AutoCSR):
         self.miso        = Signal(data_width)
         self.cs          = Signal(len(pads.cs_n), reset=1)
         self.loopback    = Signal()
-        self.clk_divider = Signal(16, reset=math.ceil(sys_clk_freq/spi_clk_freq))
+        self.clk_divider = Signal(32, reset=math.ceil(sys_clk_freq/spi_clk_freq))
 
         if with_csr:
             self.add_csr()
@@ -51,7 +51,7 @@ class SPIMaster(Module, AutoCSR):
         miso_latch = Signal()
 
         # Clock generation -------------------------------------------------------------------------
-        clk_divider = Signal(16)
+        clk_divider = Signal(32)
         clk_rise    = Signal()
         clk_fall    = Signal()
         self.comb += clk_rise.eq(clk_divider == (self.clk_divider[1:] - 1))
