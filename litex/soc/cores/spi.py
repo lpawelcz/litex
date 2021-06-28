@@ -264,7 +264,7 @@ class SPISlave(Module):
         # Master In Slave Out (MISO) generation (generated on spi_clk falling edge) ----------------
         miso_data = Signal(data_width)
         self.sync += [
-            If(self.start,
+            If(self.start | (self.length & (data_width-1) == 0),
                 miso_data.eq(self.miso)
             ).Elif(cs & clk_fall,
                 miso_data.eq(Cat(Signal(), miso_data[:-1]))
