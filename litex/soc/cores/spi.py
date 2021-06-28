@@ -46,7 +46,7 @@ class SPIMaster(Module, AutoCSR):
 
         clk_enable = Signal()
         cs_enable  = Signal()
-        count      = Signal(max=data_width)
+        count      = Signal(8)
         mosi_latch = Signal()
         miso_latch = Signal()
 
