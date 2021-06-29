@@ -24,6 +24,7 @@ from litex.soc.cores.cpu import CPU, CPU_GCC_TRIPLE_RISCV32
 CPU_VARIANTS = {
     "minimal":          "VexRiscv_Min",
     "minimal+cfu":      "VexRiscv_MinCfu",
+    "minimal+cfu+bridge":"VexRiscv_MinCfu",
     "minimal+debug":    "VexRiscv_MinDebug",
     "minimal+cfu+debug":"VexRiscv_MinCfuDebug",
     "lite":             "VexRiscv_Lite",
@@ -57,6 +58,7 @@ GCC_FLAGS = {
     #                               imacfd
     "minimal":          "-march=rv32i      -mabi=ilp32",
     "minimal+cfu":      "-march=rv32i      -mabi=ilp32",
+    "minimal+cfu+bridge":"-march=rv32i      -mabi=ilp32",
     "minimal+debug":    "-march=rv32i      -mabi=ilp32",
     "minimal+cfu+debug":"-march=rv32i      -mabi=ilp32",
     "lite":             "-march=rv32im     -mabi=ilp32",
@@ -305,19 +307,39 @@ class VexRiscv(CPU, AutoCSR):
         self.cfu_bus = cfu_bus = Record(cfu_bus_layout)
 
         # Add CFU.
-        self.specials += Instance("Cfu",
-            i_cmd_valid                = cfu_bus.cmd.valid,
-            o_cmd_ready                = cfu_bus.cmd.ready,
-            i_cmd_payload_function_id  = cfu_bus.cmd.payload.function_id,
-            i_cmd_payload_inputs_0     = cfu_bus.cmd.payload.inputs_0,
-            i_cmd_payload_inputs_1     = cfu_bus.cmd.payload.inputs_1,
-            o_rsp_valid                = cfu_bus.rsp.valid,
-            i_rsp_ready                = cfu_bus.rsp.ready,
-            o_rsp_payload_response_ok  = cfu_bus.rsp.payload.response_ok,
-            o_rsp_payload_outputs_0    = cfu_bus.rsp.payload.outputs_0,
-            i_clk                      = ClockSignal("sys"),
-            i_reset                    = ResetSignal("sys"),
-        )
+        if "bridge" in self.variant:
+            self.spi_pads = self.platform.request("proc_spi", 0)
+            self.specials += Instance("Cfu",
+                i_cmd_valid                = cfu_bus.cmd.valid,
+                o_cmd_ready                = cfu_bus.cmd.ready,
+                i_cmd_payload_function_id  = cfu_bus.cmd.payload.function_id,
+                i_cmd_payload_inputs_0     = cfu_bus.cmd.payload.inputs_0,
+                i_cmd_payload_inputs_1     = cfu_bus.cmd.payload.inputs_1,
+                o_rsp_valid                = cfu_bus.rsp.valid,
+                i_rsp_ready                = cfu_bus.rsp.ready,
+                o_rsp_payload_response_ok  = cfu_bus.rsp.payload.response_ok,
+                o_rsp_payload_outputs_0    = cfu_bus.rsp.payload.outputs_0,
+                i_clk                      = ClockSignal("sys"),
+                i_reset                    = ResetSignal("sys"),
+                o_spi_clk                  = self.spi_pads.clk,
+                o_cs_n                     = self.spi_pads.cs_n,
+                o_mosi                     = self.spi_pads.mosi,
+                i_miso                     = self.spi_pads.miso
+            )
+        else:
+            self.specials += Instance("Cfu",
+                i_cmd_valid                = cfu_bus.cmd.valid,
+                o_cmd_ready                = cfu_bus.cmd.ready,
+                i_cmd_payload_function_id  = cfu_bus.cmd.payload.function_id,
+                i_cmd_payload_inputs_0     = cfu_bus.cmd.payload.inputs_0,
+                i_cmd_payload_inputs_1     = cfu_bus.cmd.payload.inputs_1,
+                o_rsp_valid                = cfu_bus.rsp.valid,
+                i_rsp_ready                = cfu_bus.rsp.ready,
+                o_rsp_payload_response_ok  = cfu_bus.rsp.payload.response_ok,
+                o_rsp_payload_outputs_0    = cfu_bus.rsp.payload.outputs_0,
+                i_clk                      = ClockSignal("sys"),
+                i_reset                    = ResetSignal("sys"),
+            )
         self.platform.add_source(cfu_filename)
 
         # Connect CFU to CPU.
