@@ -57,8 +57,8 @@ GCC_FLAGS = {
     "minimal+debug":    "-march=rv32i      -mabi=ilp32",
     "lite":             "-march=rv32im     -mabi=ilp32",
     "lite+debug":       "-march=rv32im     -mabi=ilp32",
-    "fomu":             "-march=rv32im     -mabi=ilp32",
-    "fomu+cfu":         "-march=rv32im     -mabi=ilp32",
+    "fomu":             "-march=rv32im     -mabi=ilp32   -mno-div",  # fomu(+cfu) variant has no
+    "fomu+cfu":         "-march=rv32im     -mabi=ilp32   -mno-div",  # hardware division.
     "standard":         "-march=rv32im     -mabi=ilp32",
     "standard+debug":   "-march=rv32im     -mabi=ilp32",
     "imac":             "-march=rv32imac   -mabi=ilp32",
