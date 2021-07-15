@@ -339,6 +339,8 @@ class VexRiscv(CPU, AutoCSR):
         if "debug" in self.variant:
             soc.bus.add_slave("vexriscv_debug", self.debug_bus, region=soc_region_cls(
                 origin=soc.mem_map.get("vexriscv_debug"), size=0x100, cached=False))
+        if "fomu" in self.variant:
+            soc.add_config("CPU_DIV_UNIMPLEMENTED")
 
     def use_external_variant(self, variant_filename):
         self.external_variant = True
